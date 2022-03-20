@@ -31,7 +31,7 @@ const devConfig = {
 }
 const prodConfig = {
   smartContractAddresses: {
-    EpicNFTs: '',
+    EpicNFTs: '0x4Aa98f666EFfD892458C21Fc66dc08325Af9b32a',
   },
   supportedChainsID: [4],
   url: '',
