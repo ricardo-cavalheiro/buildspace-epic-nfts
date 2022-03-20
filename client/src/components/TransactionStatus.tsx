@@ -24,7 +24,7 @@ function TransactionStatus(
   }>
 ) {
   return (
-    <Modal opened={true || props.isOpen} onClose={props.onToggle}>
+    <Modal opened={props.isOpen} onClose={props.onToggle}>
       <ModalOverlay />
       <ModalContent>
         <ModalBody>
