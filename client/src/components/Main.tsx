@@ -1,34 +1,80 @@
-import { Flex, Button, Heading } from "@hope-ui/solid";
+import { createSignal } from 'solid-js'
+import { Flex, Button, Heading } from '@hope-ui/solid'
+
+// components
+import { TransactionStatus } from '../components/TransactionStatus'
 
 // hooks
-import { useWeb3 } from "../hooks/web3";
+import { useWeb3 } from '../hooks/web3'
+import { useContract } from '../hooks/useContract'
+import { useDisclosure } from '../hooks/useDisclosure'
 
 // web3
-import EpicNFTsABI from "../web3/ABIs/EpicNFTs.json";
-
-// hooks
-import { useContract } from "../hooks/useContract";
+import { config } from '../web3/config'
 
 // types
-import type { PropsWithChildren } from "solid-js";
+import type { PropsWithChildren } from 'solid-js'
+import type { ContractTransaction } from 'ethers'
 
 function Main(props: PropsWithChildren) {
-  // hooks
-  const { toggleIsActive } = useWeb3();
-  const { contract } = useContract({ name: "EpicNFTs" });
+  // signals
+  const [isLoading, setIsLoading] = createSignal(false)
+  const [transaction, setTransaction] = createSignal({} as ContractTransaction)
 
-  console.log(contract());
-  async function MintNFT() {}
+  // hooks
+  const { toggleIsActive, userWallet } = useWeb3()
+  const { isOpen, onToggle, onClose } = useDisclosure()
+  const { contract } = useContract({ name: 'EpicNFTs', onlyWithSigner: true })
+
+  async function mintNFT() {
+    try {
+      onToggle()
+      setIsLoading(true)
+
+      const transaction = await contract().functions.makeAnEpicNFT()
+
+      setTransaction(transaction)
+    } catch (err) {
+      console.log({ err })
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
-    <Flex as="main" direction="column" alignItems="center" gap="20px">
-      <Heading size="4xl">
-        Each unique. Each beautiful. Discover your NFT today.
-      </Heading>
+    <Flex
+      as='main'
+      direction='column'
+      justifyContent='space-between'
+      alignItems='center'
+      gap='20px'
+      w='100%'
+    >
+      <Flex direction='column' alignItems='center' gap='20px'>
+        <Heading size='4xl'>
+          Each unique. Each beautiful. Discover your NFT today.
+        </Heading>
 
-      <Button w="300px">Mint NFT</Button>
+        <Button w='300px' onClick={mintNFT} loading={isLoading()}>
+          Mint NFT
+        </Button>
+      </Flex>
+
+      <Button
+        as='a'
+        target='_blank'
+        href='https://testnets.opensea.io/collection/squarenft-3lulssb1bw'
+      >
+        View collection
+      </Button>
+
+      <TransactionStatus
+        isOpen={isOpen()}
+        onToggle={onToggle}
+        transaction={transaction()}
+      />
     </Flex>
-  );
+  )
 }
 
-export { Main };
+export { Main }

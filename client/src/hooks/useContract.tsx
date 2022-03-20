@@ -1,28 +1,42 @@
-import { createSignal, createEffect } from "solid-js";
+import { createSignal, createEffect, on } from 'solid-js'
 
 // hooks
-import { useProvider } from "./useProvider";
+import { useProvider } from './useProvider'
 
 // web3
-import { config } from "../web3/config";
+import { config } from '../web3/config'
 
 // types
-import type { PropsWithChildren } from "solid-js";
-import type { EpicNFTs } from "../web3/typechain";
+import type { PropsWithChildren } from 'solid-js'
+import type { EpicNFTs } from '../web3/typechain'
 
-function useContract(props: PropsWithChildren<{ name: "EpicNFTs" }>) {
-  const [contract, setContract] = createSignal<EpicNFTs>();
+function useContract(
+  props: PropsWithChildren<{ name: 'EpicNFTs'; onlyWithSigner?: boolean }>
+) {
+  const [contract, setContract] = createSignal<EpicNFTs>()
 
   // hooks
-  const { provider } = useProvider();
+  const { provider, signer } = useProvider()
 
-  createEffect(() => {
-    const contract = config.contractFactory["EpicNFTs"]();
+  createEffect(
+    on(
+      [provider, signer],
+      async ([provider, signer]) => {
+        if (props?.onlyWithSigner === true) {
+          const contract = config.contractFactory[props.name](signer)
 
-    console.log("provider", provider());
-  });
+          setContract(contract)
+        } else {
+          const contract = config.contractFactory[props.name](provider)
 
-  return { contract };
+          setContract(contract)
+        }
+      },
+      { defer: true }
+    )
+  )
+
+  return { contract }
 }
 
-export { useContract };
+export { useContract }
