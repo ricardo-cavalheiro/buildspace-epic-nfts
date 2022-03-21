@@ -23,6 +23,18 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 const config: HardhatUserConfig = {
   solidity: "0.8.1",
   networks: {
+    hardhat: {
+      accounts: [
+        {
+          privateKey: `${process.env.PRIVATE_KEY}`,
+          balance: "10000000000000000000000",
+        },
+      ],
+      mining: {
+        auto: false,
+        interval: 5000,
+      },
+    },
     rinkeby: {
       url: process.env.RINKEBY_URL || "",
       accounts:

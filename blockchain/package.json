@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "node": "pnpm exec hardhat node",
+    "compile": "pnpm exec hardhat compile",
     "deploy": "pnpm exec hardhat run scripts/deploy.ts --network localhost"
   },
   "keywords": [],

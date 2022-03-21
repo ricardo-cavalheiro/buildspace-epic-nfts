@@ -1,28 +1,30 @@
-import { createSignal } from 'solid-js'
+import { createSignal, Show } from 'solid-js'
 import { Flex, Button, Heading } from '@hope-ui/solid'
 
 // components
 import { TransactionStatus } from '../components/TransactionStatus'
+import { PendingTransaction } from '../components/TransactionStatus/PendingTransaction'
 
 // hooks
-import { useWeb3 } from '../hooks/web3'
 import { useContract } from '../hooks/useContract'
 import { useDisclosure } from '../hooks/useDisclosure'
 
-// web3
-import { config } from '../web3/config'
-
 // types
 import type { PropsWithChildren } from 'solid-js'
-import type { ContractTransaction } from 'ethers'
+import type { ContractTransaction, ContractReceipt } from 'ethers'
 
-function Main(props: PropsWithChildren) {
+function Main(props?: PropsWithChildren) {
   // signals
   const [isLoading, setIsLoading] = createSignal(false)
-  const [transaction, setTransaction] = createSignal({} as ContractTransaction)
+  const [isMetaMaskPopUpOpen, setIsMetaMaskPopUpOpen] = createSignal(false)
+  const [userConfirmedTransaction, setUserConfirmedTransaction] =
+    createSignal(false)
+  const [initialTransaction, setInitialTransaction] =
+    createSignal<ContractTransaction | null>(null)
+  const [transactionConfirmation, setTransactionConfirmation] =
+    createSignal<ContractReceipt | null>(null)
 
   // hooks
-  const { toggleIsActive, userWallet } = useWeb3()
   const { isOpen, onToggle, onClose } = useDisclosure()
   const { contract } = useContract({ name: 'EpicNFTs', onlyWithSigner: true })
 
@@ -30,28 +32,53 @@ function Main(props: PropsWithChildren) {
     try {
       onToggle()
       setIsLoading(true)
+      setIsMetaMaskPopUpOpen(true)
 
       const transaction = await contract().functions.makeAnEpicNFT()
+      setUserConfirmedTransaction(true)
+      setInitialTransaction(transaction)
 
-      setTransaction(transaction)
+      const transactionConfirmation = await transaction.wait()
+
+      setTransactionConfirmation(transactionConfirmation)
     } catch (err) {
       console.log({ err })
     } finally {
       setIsLoading(false)
+      setIsMetaMaskPopUpOpen(false)
     }
+  }
+
+  function handleCloseModal() {
+    // reset transaction status only when it's confirmed
+    // this way we ensure that the txn status is kept even if the user
+    // has closed the modal
+    if (transactionConfirmation()?.confirmations > 0) {
+      setInitialTransaction(null)
+      setTransactionConfirmation(null)
+      setIsLoading(false)
+      setUserConfirmedTransaction(false)
+    }
+
+    onClose()
   }
 
   return (
     <Flex
-      as='main'
-      direction='column'
-      justifyContent='space-between'
-      alignItems='center'
-      gap='20px'
       w='100%'
+      p='20px'
+      as='main'
+      gap='20px'
+      direction='column'
+      alignItems='center'
+      justifyContent='space-between'
     >
       <Flex direction='column' alignItems='center' gap='20px'>
-        <Heading size='4xl'>
+        <Heading
+          size='4xl'
+          textAlign='center'
+          w={{ '@sm': '290px', '@md': '500px', '@lg': '100%' }}
+        >
           Each unique. Each beautiful. Discover your NFT today.
         </Heading>
 
@@ -68,10 +95,18 @@ function Main(props: PropsWithChildren) {
         View collection
       </Button>
 
+      <Show
+        when={isOpen() === false && isMetaMaskPopUpOpen() === true}
+        children={<PendingTransaction onToggle={onToggle} />}
+        fallback={null}
+      />
+
       <TransactionStatus
         isOpen={isOpen()}
-        onToggle={onToggle}
-        transaction={transaction()}
+        onToggle={handleCloseModal}
+        initialTransaction={initialTransaction()}
+        transactionConfirmation={transactionConfirmation()}
+        userConfirmedTransaction={userConfirmedTransaction()}
       />
     </Flex>
   )

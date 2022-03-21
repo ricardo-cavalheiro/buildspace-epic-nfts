@@ -23,7 +23,7 @@ const common = {
 }
 const devConfig = {
   smartContractAddresses: {
-    EpicNFTs: '0x4Aa98f666EFfD892458C21Fc66dc08325Af9b32a',
+    EpicNFTs: '0x5a4db5726CBbe9276dDc95F7898511e6095873F4',
   },
   supportedChainsID: [1337, 31337],
   url: 'http://localhost:8545',

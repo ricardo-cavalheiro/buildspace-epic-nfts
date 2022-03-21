@@ -1,14 +1,9 @@
 import { ethers } from "hardhat";
 
 // ABI
-import EpicNFTsABI from "../artifacts/contracts/MyEpicNFT.sol/MyEpicNFT.json";
+import EpicNFTsABI from "../artifacts/contracts/EpicNFTs.sol/EpicNFTs.json";
 
 const main = async () => {
-  // const nftContractFactory = await ethers.getContractFactory("MyEpicNFT");
-  // const nftContract = await nftContractFactory.deploy();
-
-  // await nftContract.deployed();
-
   const [signer] = await ethers.getSigners();
 
   const contract = new ethers.Contract(
@@ -16,9 +11,6 @@ const main = async () => {
     EpicNFTsABI.abi,
     signer
   );
-
-  console.log("Contract deployed to:", contract.address);
-  console.log("signer", signer.address);
 
   // Call the function.
   let txn = await contract.makeAnEpicNFT();
