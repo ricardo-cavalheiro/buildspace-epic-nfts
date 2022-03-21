@@ -7,6 +7,7 @@ import { TransactionStatus } from '../components/TransactionStatus'
 import { PendingTransaction } from '../components/TransactionStatus/PendingTransaction'
 
 // hooks
+import { useWeb3 } from '../hooks/web3'
 import { useContract } from '../hooks/useContract'
 import { useDisclosure } from '../hooks/useDisclosure'
 
@@ -26,6 +27,7 @@ function Main(props?: PropsWithChildren) {
     createSignal<ContractReceipt | null>(null)
 
   // hooks
+  const { chainId } = useWeb3()
   const { isOpen, onToggle, onClose } = useDisclosure()
   const { contract } = useContract({ name: 'EpicNFTs', onlyWithSigner: true })
 
@@ -95,7 +97,7 @@ function Main(props?: PropsWithChildren) {
         target='_blank'
         href='https://testnets.opensea.io/collection/squarenft-3lulssb1bw'
       >
-        View collection
+        View collection on Open Sea
       </Button>
 
       <Show
@@ -104,7 +106,11 @@ function Main(props?: PropsWithChildren) {
         fallback={null}
       />
 
-      <ChainWarning />
+      <Show
+        when={chainId() !== '0x4'}
+        children={<ChainWarning />}
+        fallback={null}
+      />
 
       <TransactionStatus
         isOpen={isOpen()}

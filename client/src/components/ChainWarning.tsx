@@ -1,6 +1,12 @@
-import { Alert, AlertIcon, Flex, Text, CloseButton } from '@hope-ui/solid'
+import { Alert, AlertIcon, Text, Button } from '@hope-ui/solid'
+
+// hooks
+import { useSwitchChainId } from '../hooks/useSwitchChainId'
 
 function ChainWarning() {
+  // hooks
+  const { switchChainId } = useSwitchChainId()
+
   return (
     <Alert
       gap='10px'
@@ -10,7 +16,13 @@ function ChainWarning() {
       justifyContent='center'
     >
       <AlertIcon marginRight='0px' />
-      <Text>Make sure you're connected to the Rinkeby TestNet</Text>
+      <Text>
+        You appear to be connected to a different chain ID than Rinkeby
+      </Text>
+
+      <Button w='200px' colorScheme='warning' onClick={switchChainId}>
+        Change network
+      </Button>
     </Alert>
   )
 }
