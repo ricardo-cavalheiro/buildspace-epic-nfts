@@ -2,6 +2,7 @@ import { createSignal, Show } from 'solid-js'
 import { Flex, Button, Heading } from '@hope-ui/solid'
 
 // components
+import { ChainWarning } from './ChainWarning'
 import { TransactionStatus } from '../components/TransactionStatus'
 import { PendingTransaction } from '../components/TransactionStatus/PendingTransaction'
 
@@ -43,6 +44,8 @@ function Main(props?: PropsWithChildren) {
       setTransactionConfirmation(transactionConfirmation)
     } catch (err) {
       console.log({ err })
+
+      onClose()
     } finally {
       setIsLoading(false)
       setIsMetaMaskPopUpOpen(false)
@@ -100,6 +103,8 @@ function Main(props?: PropsWithChildren) {
         children={<PendingTransaction onToggle={onToggle} />}
         fallback={null}
       />
+
+      <ChainWarning />
 
       <TransactionStatus
         isOpen={isOpen()}
