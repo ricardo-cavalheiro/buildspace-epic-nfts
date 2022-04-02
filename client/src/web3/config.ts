@@ -15,7 +15,7 @@ const common = {
   contractFactory: {
     EpicNFTs: (signerOrProvider: Signer | Provider) => {
       return EpicNFTs__factory.connect(
-        '0x4Aa98f666EFfD892458C21Fc66dc08325Af9b32a',
+        import.meta.env.VITE_EPIC_NFTS_SMART_CONTRACT_ADDRESS,
         signerOrProvider
       )
     },
@@ -23,7 +23,7 @@ const common = {
 }
 const devConfig = {
   smartContractAddresses: {
-    EpicNFTs: '0x5a4db5726CBbe9276dDc95F7898511e6095873F4',
+    EpicNFTs: import.meta.env.VITE_EPIC_NFTS_SMART_CONTRACT_ADDRESS,
   },
   supportedChainsID: [1337, 31337],
   url: 'http://localhost:8545',
@@ -31,10 +31,10 @@ const devConfig = {
 }
 const prodConfig = {
   smartContractAddresses: {
-    EpicNFTs: '0x4Aa98f666EFfD892458C21Fc66dc08325Af9b32a',
+    EpicNFTs: import.meta.env.VITE_EPIC_NFTS_SMART_CONTRACT_ADDRESS,
   },
   supportedChainsID: [4],
-  url: '',
+  url: 'https://rinkey.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
   ...common,
 }
 

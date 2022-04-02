@@ -1,6 +1,9 @@
 // hooks
 import { useWeb3 } from '../hooks/web3'
 
+// utils
+import { currentEnv } from '../utils/currentEnv'
+
 function useSwitchChainId() {
   // hooks
   const { ethereum } = useWeb3()
@@ -9,7 +12,7 @@ function useSwitchChainId() {
     try {
       ethereum().request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x4' }],
+        params: [{ chainId: currentEnv === 'development' ? '0x7A69' : '0x4' }],
       })
     } catch (err) {
       console.log({ err })

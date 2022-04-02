@@ -13,7 +13,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^4.29.1
   '@typescript-eslint/parser': ^4.29.1
   chai: ^4.2.0
-  dotenv: ^10.0.0
+  dotenv: ^16.0.0
   eslint: ^7.29.0
   eslint-config-prettier: ^8.3.0
   eslint-config-standard: ^16.0.3
@@ -33,6 +33,9 @@ specifiers:
   typechain: ^5.1.2
   typescript: ^4.5.2
 
+dependencies:
+  dotenv: 16.0.0
+
 devDependencies:
   '@nomiclabs/hardhat-ethers': 2.0.5_ethers@5.6.0+hardhat@2.9.1
   '@nomiclabs/hardhat-etherscan': 3.0.3_hardhat@2.9.1
@@ -46,7 +49,6 @@ devDependencies:
   '@typescript-eslint/eslint-plugin': 4.33.0_65e88d2733f36d3624b406e590cf0b3b
   '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.6.2
   chai: 4.3.6
-  dotenv: 10.0.0
   eslint: 7.32.0
   eslint-config-prettier: 8.5.0_eslint@7.32.0
   eslint-config-standard: 16.0.3_6a48346ff31498e55146b31bc801dc94
@@ -3138,10 +3140,10 @@ packages:
     resolution: {integrity: sha512-6QvTW9mrGeIegrFXdtQi9pk7O/nSK6lSdXW2eqUspN5LWD7UTji2Fqw5V2YLjBpHEoU9Xl/eUWNpDeZvoyOv2w==}
     dev: true
 
-  /dotenv/10.0.0:
-    resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
-    engines: {node: '>=10'}
-    dev: true
+  /dotenv/16.0.0:
+    resolution: {integrity: sha512-qD9WU0MPM4SWLPJy/r2Be+2WgQj8plChsyrCNQzW/0WjvcJQiKQJ9mH3ZgB3fxbUUxgc/11ZJ0Fi5KiimWGz2Q==}
+    engines: {node: '>=12'}
+    dev: false
 
   /dotignore/0.1.2:
     resolution: {integrity: sha512-UGGGWfSauusaVJC+8fgV+NVvBXkCTmVv7sk6nojDZZvuOUNGUy0Zk4UpHQD6EDjS0jpBwcACvH4eofvyzBcRDw==}

@@ -1,10 +1,4 @@
-import {
-  createSignal,
-  createEffect,
-  createContext,
-  onMount,
-  on,
-} from 'solid-js'
+import { createSignal, createEffect, createContext, onMount } from 'solid-js'
 import detectEthereumProvider from '@metamask/detect-provider'
 
 // types
@@ -48,7 +42,6 @@ function Web3Provider(props?: PropsWithChildren<{}>) {
   })
 
   onMount(() => {
-    console.log('chainId', ethereum().chainId)
     setChainId(ethereum().chainId)
   })
 
@@ -61,7 +54,7 @@ function Web3Provider(props?: PropsWithChildren<{}>) {
         return
       }
 
-      setUserWallet('')
+      disconnectWallet()
     }
 
     ethereum().on('accountsChanged', listener)

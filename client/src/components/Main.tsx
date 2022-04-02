@@ -7,15 +7,13 @@ import { TransactionStatus } from '../components/TransactionStatus'
 import { PendingTransaction } from '../components/TransactionStatus/PendingTransaction'
 
 // hooks
-import { useWeb3 } from '../hooks/web3'
 import { useContract } from '../hooks/useContract'
 import { useDisclosure } from '../hooks/useDisclosure'
 
 // types
-import type { PropsWithChildren } from 'solid-js'
 import type { ContractTransaction, ContractReceipt } from 'ethers'
 
-function Main(props?: PropsWithChildren) {
+function Main() {
   // signals
   const [isLoading, setIsLoading] = createSignal(false)
   const [isMetaMaskPopUpOpen, setIsMetaMaskPopUpOpen] = createSignal(false)
@@ -27,7 +25,6 @@ function Main(props?: PropsWithChildren) {
     createSignal<ContractReceipt | null>(null)
 
   // hooks
-  const { chainId } = useWeb3()
   const { isOpen, onToggle, onClose } = useDisclosure()
   const { contract } = useContract({ name: 'EpicNFTs', onlyWithSigner: true })
 
@@ -37,7 +34,9 @@ function Main(props?: PropsWithChildren) {
       setIsLoading(true)
       setIsMetaMaskPopUpOpen(true)
 
-      const transaction = await contract().functions.makeAnEpicNFT()
+      const transaction = await contract().functions.makeAnEpicNFT({
+        gasLimit: 25_000,
+      })
       setUserConfirmedTransaction(true)
       setInitialTransaction(transaction)
 
@@ -106,11 +105,7 @@ function Main(props?: PropsWithChildren) {
         fallback={null}
       />
 
-      <Show
-        when={chainId() !== '0x4'}
-        children={<ChainWarning />}
-        fallback={null}
-      />
+      <ChainWarning />
 
       <TransactionStatus
         isOpen={isOpen()}
