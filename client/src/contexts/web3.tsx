@@ -1,4 +1,10 @@
-import { createSignal, createEffect, createContext, onMount } from 'solid-js'
+import {
+  createSignal,
+  createEffect,
+  createContext,
+  onMount,
+  on,
+} from 'solid-js'
 import detectEthereumProvider from '@metamask/detect-provider'
 
 // types
@@ -11,7 +17,6 @@ type Web3Context = {
   toggleIsActive: () => boolean
   connectWallet: () => Promise<string>
   disconnectWallet: () => void
-  chainId: Accessor<string>
 }
 
 const Web3Context = createContext<Web3Context>({} as Web3Context)
@@ -21,7 +26,6 @@ function Web3Provider(props?: PropsWithChildren<{}>) {
     window.ethereum as MetaMaskInpageProvider
   )
   const [userWallet, setUserWallet] = createSignal('')
-  const [chainId, setChainId] = createSignal('')
 
   // set up ethereum provider on context mount
   onMount(async () => {
@@ -39,10 +43,6 @@ function Web3Provider(props?: PropsWithChildren<{}>) {
     if (selectedAddress) {
       setUserWallet(selectedAddress)
     }
-  })
-
-  onMount(() => {
-    setChainId(ethereum().chainId)
   })
 
   // watch for wallet change events triggered by the user
@@ -107,7 +107,6 @@ function Web3Provider(props?: PropsWithChildren<{}>) {
     connectWallet,
     disconnectWallet,
     toggleIsActive,
-    chainId,
   }
 
   return (

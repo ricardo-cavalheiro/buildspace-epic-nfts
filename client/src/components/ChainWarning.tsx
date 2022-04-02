@@ -1,4 +1,5 @@
 import { Alert as HAlert, AlertIcon, Text, Button } from '@hope-ui/solid'
+import { createEffect } from 'solid-js'
 
 // hooks
 import { useWeb3 } from '../hooks/web3'
@@ -26,7 +27,7 @@ function Alert(
     >
       <AlertIcon marginRight='0px' />
       <Text>
-        You appear to be connected to a different chain ID than {props.chainId}
+        You appear to be connected to a different chain ID than{' '}
         {props.networkName}
       </Text>
 
@@ -39,16 +40,12 @@ function Alert(
 
 function ChainWarning() {
   // hooks
-  const { chainId } = useWeb3()
+  const { ethereum } = useWeb3()
 
-  function watchChainId() {
-    return chainId()
-  }
-
-  if (currentEnv === 'development' && watchChainId() !== '0x7a69') {
-    return <Alert chainId={watchChainId()} networkName='HardHat' />
-  } else if (currentEnv === 'production' && watchChainId() !== '0x4') {
-    return <Alert chainId={watchChainId()} networkName='Rinkeby' />
+  if (currentEnv === 'development' && ethereum().chainId !== '0x7a69') {
+    return <Alert chainId={ethereum().chainId} networkName='HardHat' />
+  } else if (currentEnv === 'production' && ethereum().chainId !== '0x4') {
+    return <Alert chainId={ethereum().chainId} networkName='Rinkeby' />
   } else {
     return null
   }
